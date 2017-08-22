@@ -39,8 +39,6 @@ extension ChatTableViewController {
                 model.didPlayAudio = true
             }
         })
-        
-        
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
