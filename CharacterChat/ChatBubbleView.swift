@@ -18,7 +18,6 @@ final class ChatBubbleView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)
-        layer.borderWidth = 2
         layer.cornerRadius = 25
         layer.masksToBounds = true
         addSubview(message)
@@ -39,6 +38,8 @@ extension ChatBubbleView: ViewModelConfigurable {
     
     func configure(with viewModel: ChatBubbleViewModel) {
         message.text = viewModel.text
+        message.textColor = viewModel.style.textColor
+        backgroundColor = viewModel.style.color
     }
 }
 

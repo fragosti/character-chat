@@ -11,7 +11,12 @@ import UIKit
 final class ChatCell: UITableViewCell {
     
     var chatBubbleView: ChatBubbleView?
-    let senderLabel: UILabel = UILabel()
+    let senderLabel: UILabel = {
+        let label = UILabel()
+        label.textColor = UIColor.gray
+        return label
+    }()
+    
     let senderAvatar: UIImageView = {
         let avatar = UIImage(named: "avatar")
         let imageView = UIImageView(image: avatar)
@@ -50,10 +55,10 @@ private extension ChatCell {
         ]
         switch(sender) {
         case .sent:
-            constraints.append(NSLayoutConstraint.constraints(withVisualFormat: "H:[senderLabel]-(32)-|", options: [], metrics: nil, views: views))
+            constraints.append(NSLayoutConstraint.constraints(withVisualFormat: "H:[senderLabel]-(40)-|", options: [], metrics: nil, views: views))
             constraints.append(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(64)-[chatBubbleView]|", options: [], metrics: nil, views: views))
         case .received:
-            constraints.append(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(32)-[senderLabel]", options: [], metrics: nil, views: views))
+            constraints.append(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(40)-[senderLabel]", options: [], metrics: nil, views: views))
             constraints.append(NSLayoutConstraint.constraints(withVisualFormat: "H:|[senderAvatar(25)][chatBubbleView]-(64)-|", options: [], metrics: nil, views: views))
         }
         constraints.flatMap { $0 }.activate()

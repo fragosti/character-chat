@@ -14,11 +14,15 @@ let chatCellIdentifiers = [userCellIdentifier, characterCellIdentifier]
 
 class ChatCellModel {
     
+    static let sentBubbleStyle = ChatBubbleViewModel.Style(color: UIColor.gray, textColor: UIColor.white)
+    static let receivedBubbleStyle = ChatBubbleViewModel.Style(color: UIColor.blue, textColor: UIColor.black)
+    
     let origin: ChatLine.Origin
     let sender: Sender
     let chatBubbleViewModel: ChatBubbleViewModel
     let soundFileUri: String?
     var didPlayAudio: Bool = false
+ 
     
     var reuseIdentifier: String {
         switch(origin) {
@@ -37,7 +41,7 @@ class ChatCellModel {
     }
     
     convenience init(line: ChatLine) {
-        let style = ChatBubbleViewModel.Style(color: UIColor.white, textColor: UIColor.black)
+        let style = line.origin == .sent ? ChatCellModel.sentBubbleStyle : ChatCellModel.receivedBubbleStyle
         let chatBubbleViewModel = ChatBubbleViewModel(text: line.line, style: style)
         self.init(origin: line.origin, sender: line.sender, chatBubbleViewModel: chatBubbleViewModel, soundFileUri: line.soundFileUri)
     }
