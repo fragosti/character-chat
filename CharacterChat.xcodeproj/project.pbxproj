@@ -502,6 +502,7 @@
 				097813081F4906FA00C6E277 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		097813091F4906FA00C6E277 /* Build configuration list for PBXNativeTarget "CharacterChatTests" */ = {
 			isa = XCConfigurationList;
@@ -510,6 +511,7 @@
 				0978130B1F4906FA00C6E277 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

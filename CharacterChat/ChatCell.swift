@@ -18,12 +18,13 @@ final class ChatCell: UITableViewCell {
     }()
     
     let senderAvatar: UIImageView = {
-        let avatar = UIImage(named: "avatar")
-        let imageView = UIImageView(image: avatar)
+        let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
+    let player: AudioPlayerProtocol = AudioPlayer()
+
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         selectionStyle = .none
@@ -34,6 +35,7 @@ final class ChatCell: UITableViewCell {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
+    
 }
 
 // MARK: - Private Helpers
@@ -77,6 +79,10 @@ extension ChatCell: ViewModelConfigurable {
         if viewModel.origin == .sent {
             senderLabel.isHidden = true
             senderAvatar.isHidden = true
+        }
+        
+        if let image = viewModel.avatarImage {
+            senderAvatar.image = image
         }
         
         if let bubbleView = chatBubbleView {

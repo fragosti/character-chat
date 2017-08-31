@@ -39,13 +39,13 @@ struct ChatLine {
 
 struct Sender {
     let name: String
-    let avatarImgPath: String
+    let avatarImgPath: String?
 }
 
 // This would be fetched from a server or just defined in text/json files, but definining in this way for convenience.
 func createChatLines() -> [ChatLine] {
-    let userSender = Sender(name: "Jack", avatarImgPath: "")
-    let characterSender = Sender(name: "Kyle", avatarImgPath: "")
+    let userSender = Sender(name: "Jack", avatarImgPath: nil)
+    let characterSender = Sender(name: "Kyle", avatarImgPath: "avatar")
     let userChatLines = userScript.map { ChatLine(origin: .sent, line: $0, sender: userSender, soundFileUri: nil) }
     let characterChatLines = characterScript.enumerated().map { ChatLine(origin: .received, line: $1, sender: characterSender, soundFileUri: "\($0+1)" ) }
     return zip(characterChatLines, userChatLines).map { [$0, $1] }.flatMap { $0 }
