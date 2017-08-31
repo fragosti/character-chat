@@ -23,6 +23,7 @@ class ChatCellModel {
     let soundFileUri: String?
     let avatarImage: UIImage?
     var didPlayAudio: Bool = false
+    var audioProgress: Double
  
     
     var reuseIdentifier: String {
@@ -34,12 +35,13 @@ class ChatCellModel {
         }
     }
     
-    init(origin: ChatLine.Origin, sender: Sender, chatBubbleViewModel: ChatBubbleViewModel, soundFileUri: String? = nil, avatarImage: UIImage? = nil) {
+    init(origin: ChatLine.Origin, sender: Sender, chatBubbleViewModel: ChatBubbleViewModel, soundFileUri: String? = nil, avatarImage: UIImage? = nil, audioProgress: Double = 0) {
         self.origin = origin
         self.sender = sender
         self.chatBubbleViewModel = chatBubbleViewModel
         self.soundFileUri = soundFileUri
         self.avatarImage = avatarImage
+        self.audioProgress = audioProgress
     }
     
     convenience init(line: ChatLine) {
@@ -49,6 +51,7 @@ class ChatCellModel {
         self.init(origin: line.origin, sender: line.sender, chatBubbleViewModel: chatBubbleViewModel, soundFileUri: line.soundFileUri, avatarImage: image)
     }
 }
+
 
 // MARK: - ViewModel
 extension ChatCellModel: ViewModel {

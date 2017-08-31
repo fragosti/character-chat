@@ -34,6 +34,18 @@ class Conversation: NSObject {
     func isLastVisibleModel(for row: Int) -> Bool {
         return row == place - 1
     }
+    
+    func indexOf(_ model: ChatCellModel) -> Int {
+        return models.index(where: { (chatModel) -> Bool in
+            return model === chatModel
+        }) ?? 0
+    }
+    
+    func resetAudioProgress() {
+        models.forEach {
+            $0.audioProgress = 0
+        }
+    }
 }
 
 // MARK: - TableViewDatasource

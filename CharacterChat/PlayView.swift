@@ -9,27 +9,39 @@
 import UIKit
 import CircleProgressView
 
+protocol PlayViewDelegate: class {
+    func didPressPlay()
+}
+
 class PlayView: UIView {
-    enum State {
-        case play
-        case progress(progress:Float)
-    }
-    
-    var state: State = .play {
+
+    var progress: Double = 0 {
         didSet {
-            // do stuff
+            if progress == 0 {
+                progressView.isHidden = true
+                playView.isHidden = false
+            } else {
+                progressView.isHidden = false
+                playView.isHidden = true
+            }
+            progressView.setProgress(progress, animated: oldValue < progress)
         }
     }
+    
+    weak var delegate: PlayViewDelegate?
     
     let playView: UIButton = {
         let button = UIButton()
         button.setImage(UIImage(named: "play-button"), for: .normal)
         button.contentMode = .scaleAspectFit
+        button.addTarget(self, action: #selector(didPlay), for: .touchUpInside)
         return button
     }()
     
     let progressView: CircleProgressView = {
         let progress = CircleProgressView()
+        progress.trackWidth = 3
+        progress.backgroundColor = UIColor.white
         progress.isHidden = true
         return progress
     }()
@@ -64,5 +76,9 @@ private extension PlayView {
         ].flatMap { $0 }
         
         constraints.activate()
+    }
+    
+    @objc func didPlay() {
+        delegate?.didPressPlay()
     }
 }

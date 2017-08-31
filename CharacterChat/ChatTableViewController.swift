@@ -10,8 +10,8 @@ import UIKit
 
 class ChatTableViewController: UITableViewController {
     
-    let conversation: Conversation
-    var player: AudioPlayerProtocol
+    fileprivate let conversation: Conversation
+    fileprivate var player: AudioPlayerProtocol
     
     init(conversation: Conversation, player: AudioPlayerProtocol = AudioPlayer()) {
         self.conversation = conversation
@@ -28,9 +28,11 @@ class ChatTableViewController: UITableViewController {
 // MARK: - UITableViewDelegate
 extension ChatTableViewController {
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        guard let cell = tableView.cellForRow(at: indexPath) as? ChatCell else { return }
         let model = conversation.models[indexPath.row]
         if shouldShowNextLine(from: indexPath.row) {
             showNextLine(from: indexPath)
+            return
         }
         playAudio(from: model, onCompletion: { (didSucceed) in
             // If the user didn't finish playing the auto-play, we should show the next line on this completion.
@@ -38,16 +40,28 @@ extension ChatTableViewController {
                 self.showNextLine(from: indexPath)
                 model.didPlayAudio = true
             }
+        }, onProgress: { (progress) in
+            model.audioProgress = progress
+            cell.progress = progress
         })
     }
     
     override func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        guard let cell = cell as? ChatCell else { return }
         let model = conversation.models[indexPath.row]
+        
+        
         // Only auto-play once
         if !model.didPlayAudio {
-            playAudio(from: model, onCompletion: { (didSucceed) in
-                self.showNextLine(from: indexPath)
+            playAudio(from: model, onCompletion: { [weak self] (didSucceed) in
+                self?.showNextLine(from: indexPath)
                 model.didPlayAudio = true
+                model.audioProgress = 0
+                cell.progress = 0
+                self?.player.stop()
+            }, onProgress: { (progress) in
+                model.audioProgress = progress
+                cell.progress = progress
             })
         }
     }
@@ -65,10 +79,11 @@ private extension ChatTableViewController {
         tableView.insertRows(at: [indexPath.nextInSection()], with: .automatic)
     }
     
-    func playAudio(from model: ChatCellModel, onCompletion: AudioPlayer.CompletionHandler? = nil) {
+    func playAudio(from model: ChatCellModel, onCompletion: AudioPlayer.CompletionHandler? = nil, onProgress: AudioPlayer.ProgressHandler? = nil) {
         if let resource = model.soundFileUri {
             player.resource = resource
             player.onCompletion = onCompletion
+            player.onProgress = onProgress
             player.play()
         }
     }

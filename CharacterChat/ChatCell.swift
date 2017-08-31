@@ -10,22 +10,26 @@ import UIKit
 
 final class ChatCell: UITableViewCell {
     
-    var chatBubbleView: ChatBubbleView?
-    let senderLabel: UILabel = {
+    var progress: Double = 0 {
+        didSet {
+            playView.progress = progress
+        }
+    }
+    
+    fileprivate var chatBubbleView: ChatBubbleView?
+    fileprivate let senderLabel: UILabel = {
         let label = UILabel()
         label.textColor = UIColor.gray
         return label
     }()
     
-    let senderAvatar: UIImageView = {
+    fileprivate let senderAvatar: UIImageView = {
         let imageView = UIImageView()
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
     
-    let playView: PlayView = PlayView()
-    
-    let player: AudioPlayerProtocol = AudioPlayer()
+    fileprivate let playView: PlayView = PlayView()
 
     override init(style: UITableViewCellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
@@ -84,6 +88,7 @@ extension ChatCell: ViewModelConfigurable {
     
     func configure(with viewModel: ChatCellModel) {
         senderLabel.text = viewModel.sender.name
+        progress = viewModel.audioProgress
         if viewModel.origin == .sent {
             senderLabel.isHidden = true
             senderAvatar.isHidden = true
