@@ -24,7 +24,7 @@ final class ChatCell: UITableViewCell {
 
 // MARK: - Private Helpers
 private extension ChatCell {
-    func installConstraints(for sender: ChatLine.Sender) {
+    func installConstraints(for sender: ChatLine.Origin) {
         guard let chatBubbleView = chatBubbleView else { return }
         chatBubbleView.translatesAutoresizingMaskIntoConstraints = false
         let views = ["chatBubbleView": chatBubbleView]
@@ -32,9 +32,9 @@ private extension ChatCell {
             NSLayoutConstraint.constraints(withVisualFormat: "V:|[chatBubbleView]|", options: [], metrics: nil, views: views),
         ]
         switch(sender) {
-        case .user:
+        case .sent:
             constraints.append(NSLayoutConstraint.constraints(withVisualFormat: "H:|-(64)-[chatBubbleView]|", options: [], metrics: nil, views: views))
-        case .character:
+        case .received:
             constraints.append(NSLayoutConstraint.constraints(withVisualFormat: "H:|[chatBubbleView]-(64)-|", options: [], metrics: nil, views: views))
         }
         constraints.flatMap { $0 }.activate()
@@ -54,7 +54,7 @@ extension ChatCell: ViewModelConfigurable {
         } else {
             chatBubbleView = viewModel.chatBubbleViewModel.makeView()
             contentView.addSubview(chatBubbleView!)
-            installConstraints(for: viewModel.sender)
+            installConstraints(for: viewModel.origin)
         }
     }
 }

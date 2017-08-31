@@ -28,7 +28,7 @@ class Conversation: NSObject {
     }
     
     func isUserModel(for row: Int) -> Bool {
-        return models[row].sender == .user
+        return models[row].origin == .sent
     }
     
     func isLastVisibleModel(for row: Int) -> Bool {

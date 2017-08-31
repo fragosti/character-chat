@@ -27,20 +27,27 @@ let userScript = [
 ]
 
 struct ChatLine {
-    enum Sender {
-        case user
-        case character
+    enum Origin {
+        case sent
+        case received
     }
+    let origin: Origin
     let line: String
     let sender: Sender
     let soundFileUri: String?
 }
 
+struct Sender {
+    let name: String
+    let avatarImgPath: String
+}
 
 // This would be fetched from a server or just defined in text/json files, but definining in this way for convenience.
 func createChatLines() -> [ChatLine] {
-    let userChatLines = userScript.map { ChatLine(line: $0, sender: .user, soundFileUri: nil) }
-    let characterChatLines = characterScript.enumerated().map { ChatLine(line: $1, sender: .character, soundFileUri: "\($0+1)" ) }
+    let userSender = Sender(name: "Jack", avatarImgPath: "")
+    let characterSender = Sender(name: "Kyle", avatarImgPath: "")
+    let userChatLines = userScript.map { ChatLine(origin: .sent, line: $0, sender: userSender, soundFileUri: nil) }
+    let characterChatLines = characterScript.enumerated().map { ChatLine(origin: .received, line: $1, sender: characterSender, soundFileUri: "\($0+1)" ) }
     return zip(characterChatLines, userChatLines).map { [$0, $1] }.flatMap { $0 }
 }
 
@@ -48,8 +55,7 @@ func createChatLines() -> [ChatLine] {
 class ConversationFactory {
     
     static func createConversation(from lines: [ChatLine]) ->  Conversation {
-        let style = ChatBubbleViewModel.Style(color: UIColor.white, textColor: UIColor.black)
-        let models = lines.map { ChatCellModel(sender: $0.sender, chatBubbleViewModel: ChatBubbleViewModel(text: $0.line, style: style), soundFileUri: $0.soundFileUri) }
+        let models = lines.map { ChatCellModel(line: $0) }
         return Conversation(models: models)
     }
     
